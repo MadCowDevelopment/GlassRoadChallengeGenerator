@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace grcg
 {
@@ -6,10 +8,23 @@ namespace grcg
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var generator = new Generator(BuildingData.Load(), ChallengeData.Load());
+            var challengePost = generator.Generate();
+            File.WriteAllText(@".\ForumPost.txt", challengePost);
+            OpenFile();
+        }
 
-            Console.WriteLine("Press any key to continue");
-            Console.ReadKey(false);
+        private static void OpenFile()
+        {
+            var pi = new ProcessStartInfo(@".\ForumPost.txt")
+            {
+                Arguments = Path.GetFileName(@".\ForumPost.txt"),
+                UseShellExecute = true,
+                WorkingDirectory = Path.GetDirectoryName(@".\"),
+                Verb = "OPEN"
+            };
+
+            Process.Start(pi);
         }
     }
 }
